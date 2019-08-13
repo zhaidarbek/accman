@@ -1,4 +1,4 @@
-package com.zhaidarbek.learn;
+package com.zhaidarbek.learn.accman;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -17,13 +17,11 @@ public class AccountManagerApplication extends Application<AccountManagerConfigu
 
     @Override
     public void initialize(final Bootstrap<AccountManagerConfiguration> bootstrap) {
-        // TODO: application initialization
     }
 
     @Override
     public void run(final AccountManagerConfiguration configuration,
                     final Environment environment) {
-        // TODO: implement application
     }
 
 }
