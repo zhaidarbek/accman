@@ -1,4 +1,26 @@
 logging:
   level: INFO
   loggers:
-    com.zhaidarbek.learn: DEBUG
+    com.zhaidarbek.learn.accman: DEBUG
+server:
+  applicationConnectors:
+    - type: http
+      port: 9000
+  adminConnectors:
+    - type: http
+      port: 9001
+  applicationContextPath: /accman
+database:
+  driverClass: org.h2.Driver
+  url: jdbc:h2:mem:accman;INIT=runscript from 'classpath:sql/init_db.sql' # use jdbc:h2:~/accman for embedded db
+  properties:
+    charset: UTF-8
+  maxWaitForConnection: 3s
+  minSize: 8
+  maxSize: 30
+  validationQuery: "SELECT 1"
+  validationQueryTimeout: 3s
+  checkConnectionWhileIdle: false
+  evictionInterval: 10s
+  minIdleTime: 1 minute
+  checkConnectionOnBorrow: true

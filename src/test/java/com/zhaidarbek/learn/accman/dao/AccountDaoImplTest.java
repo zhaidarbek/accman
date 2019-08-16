@@ -1,6 +1,7 @@
 package com.zhaidarbek.learn.accman.dao;
 
 import com.zhaidarbek.learn.accman.model.Account;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.jdbi.v3.testing.JdbiRule;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -23,16 +24,18 @@ public class AccountDaoImplTest {
     @ClassRule
     public static JdbiRule jdbiRule = JdbiRule.h2();
 
-    private AccountDaoImpl accountDao;
+    private AccountDao accountDao;
 
     @BeforeClass
     public static void setupDatabase() {
         jdbiRule.getJdbi().withHandle(handle -> handle.execute(CREATE_TABLE_ACCOUNT));
+        jdbiRule.getJdbi().installPlugin(new SqlObjectPlugin());
     }
 
     @Before
     public void setup() {
-        accountDao = new AccountDaoImpl(jdbiRule.getJdbi());
+        accountDao = jdbiRule.getJdbi().onDemand(AccountDao.class);
+
         jdbiRule.getJdbi().withHandle(handle -> {
             handle.execute(INSERT_INTO_ACCOUNT, 1L, "Savings Account", 100);
             handle.execute(INSERT_INTO_ACCOUNT, 2L, "Checking Account", 200);

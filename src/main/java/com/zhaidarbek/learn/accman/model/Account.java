@@ -7,6 +7,10 @@ public class Account {
     private final String name;
     private final BigDecimal balance;
 
+    public Account(String name, BigDecimal balance) {
+        this(null, name, balance);
+    }
+
     public Account(Long id, String name, BigDecimal balance) {
         this.id = id;
         this.name = name;

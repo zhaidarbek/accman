@@ -8,6 +8,7 @@ import com.zhaidarbek.learn.accman.service.exception.MoneyTransferFailedExceptio
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class AccountServiceImpl implements AccountService {
     private static final DecimalFormat DF = new DecimalFormat("0.00");
@@ -20,13 +21,29 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account createAccount(Account account) {
+        Long accountId = accountDao.createAccount(account);
+        return getAccountById(accountId);
+    }
+
+    @Override
+    public Account getAccountById(Long accountId) {
+        return accountDao.getAccountById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
+    }
+
+    @Override
+    public List<Account> listAccounts() {
+        return accountDao.listAccounts();
+    }
+
+    @Override
     public void transferFunds(Long accountFromId, Long accountToId, BigDecimal amount) throws MoneyTransferFailedException {
         if (amount.compareTo(BigDecimal.ZERO) < 1) {
             throw new MoneyTransferFailedException(String.format("Invalid transfer amount [%s]", DF.format(amount)));
         }
 
-        Account accountFrom = accountDao.getAccountById(accountFromId).orElseThrow(AccountNotFoundException::new);
-        Account accountTo = accountDao.getAccountById(accountToId).orElseThrow(AccountNotFoundException::new);
+        Account accountFrom = accountDao.getAccountById(accountFromId).orElseThrow(() -> new AccountNotFoundException(accountFromId));
+        Account accountTo = accountDao.getAccountById(accountToId).orElseThrow(() -> new AccountNotFoundException(accountToId));
         if (accountFrom.getBalance().compareTo(amount) < 0) {
             throw new MoneyTransferFailedException(String.format("Insufficient funds in account '%s'", accountFrom.getName()));
         }
